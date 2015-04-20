@@ -19,6 +19,7 @@ import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -28,6 +29,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import edu.uci.apperture.fragments.ChatFragment;
+import edu.uci.apperture.fragments.GameFragment;
 import edu.uci.apperture.fragments.ImageFragment;
 import edu.uci.apperture.service.MainService;
 
@@ -35,7 +37,7 @@ public class Main extends ActionBarActivity implements ServiceConnection {
     private static final String TAG = Main.class.getSimpleName();
     private IMainListener.APP_STATE appState = IMainListener.APP_STATE.MAIN;
     private MainService mService;
-
+    private GameFragment gameFragment;
     private static final int REQUEST_ENABLE_BT = 1;
     private static final int REQUEST_IMAGE_CAPTURE = 2;
 
@@ -64,7 +66,7 @@ public class Main extends ActionBarActivity implements ServiceConnection {
                     int imageWidth = factoryOptions.outWidth;
                     int imageHeight = factoryOptions.outHeight;
 
-                    int scaleFactor = Math.min(imageWidth/width, imageHeight/height);
+                    int scaleFactor = Math.min(imageWidth / width, imageHeight / height);
 
                     factoryOptions.inJustDecodeBounds = false;
                     factoryOptions.inSampleSize = scaleFactor;
@@ -79,6 +81,7 @@ public class Main extends ActionBarActivity implements ServiceConnection {
                     Toast.makeText(this,
                             getString(R.string.bluetooth_not_enabled),
                             Toast.LENGTH_SHORT).show();
+
                 } else {
                     //Establish connections
                 }
@@ -92,17 +95,14 @@ public class Main extends ActionBarActivity implements ServiceConnection {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        BluetoothAdapter mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
-        if (mBluetoothAdapter != null) {
-            if (!mBluetoothAdapter.isEnabled()) {
-                Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
-                startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT);
-            }
-        }
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+                WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
         if (savedInstanceState == null) {
+            gameFragment = new GameFragment();
             getSupportFragmentManager().beginTransaction()
-                    .add(R.id.container, new ChatFragment(), "Chat")
+//                    .add(R.id.container, new ChatFragment(), "Chat")
+                    .add(R.id.container, gameFragment, "Game")
                     .commit();
         }
         startService(new Intent(this, MainService.class));
@@ -165,6 +165,7 @@ public class Main extends ActionBarActivity implements ServiceConnection {
     public void onBackPressed() {
         switch (appState) {
             case MAIN:
+                mService.shutdown();
                 stopService(new Intent(this, MainService.class));
             default:
                 super.onBackPressed();
@@ -189,15 +190,21 @@ public class Main extends ActionBarActivity implements ServiceConnection {
         return image;
     }
 
+    public MainService getService() {
+        return mService;
+    }
+
     @Override
     public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
         mService = ((MainService.MainBinder) iBinder).getService();
+        if (gameFragment != null) {
+            mService.setGameFragment(gameFragment);
+        }
     }
 
     @Override
     public void onServiceDisconnected(ComponentName componentName) {
         mService = null;
     }
-
 
 }

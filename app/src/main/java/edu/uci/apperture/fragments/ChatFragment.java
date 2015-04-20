@@ -21,6 +21,7 @@ public class ChatFragment extends Fragment implements ImageFragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_main, container, false);
         mImageView = (ImageView) view.findViewById(R.id.main_image);
+
         return view;
     }
 
