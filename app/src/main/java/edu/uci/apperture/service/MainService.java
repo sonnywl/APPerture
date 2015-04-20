@@ -10,6 +10,8 @@ import android.os.Binder;
 import android.os.IBinder;
 import android.util.Log;
 
+import java.io.IOException;
+
 import edu.uci.apperture.R;
 import edu.uci.apperture.database.DatabaseManager;
 import edu.uci.apperture.fragments.IGameFragment;
@@ -43,14 +45,15 @@ public class MainService extends Service implements MediaPlayer.OnCompletionList
     }
 
     // Plays the song that the user selected from the UI side
-    public void playSong(String song) {
+    public void playSong(int rawId) {
+        mediaPlayer = MediaPlayer.create(this, rawId);
+        mediaPlayer.start();
 
     }
 
     // Decisions to the user's interaction here
     public void notifyOnClick(int btnGame) {
         if (gameFragment != null) {
-            Log.i(TAG, "Hello button " + btnGame);
             // TODO either pause or notify the UI to pause
             // Need to check against the music and the beat time
             switch (btnGame) {

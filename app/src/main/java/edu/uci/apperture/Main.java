@@ -1,7 +1,6 @@
 package edu.uci.apperture;
 
 import android.app.Activity;
-import android.bluetooth.BluetoothAdapter;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
@@ -11,40 +10,39 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
-import android.os.Handler;
 import android.os.IBinder;
-import android.os.Message;
 import android.provider.MediaStore;
+import android.support.v4.app.DialogFragment;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.WindowManager;
-import android.widget.ImageView;
-import android.widget.Toast;
 
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import edu.uci.apperture.fragments.ChatFragment;
 import edu.uci.apperture.fragments.GameFragment;
 import edu.uci.apperture.fragments.ImageFragment;
+import edu.uci.apperture.fragments.SongDialogFragment;
 import edu.uci.apperture.service.MainService;
 
-public class Main extends ActionBarActivity implements ServiceConnection {
+public class Main extends ActionBarActivity implements
+        ServiceConnection,
+        SongDialogFragment.SongDialogListener {
     private static final String TAG = Main.class.getSimpleName();
     private IMainListener.APP_STATE appState = IMainListener.APP_STATE.MAIN;
     private MainService mService;
     private GameFragment gameFragment;
-    private static final int REQUEST_ENABLE_BT = 1;
     private static final int REQUEST_IMAGE_CAPTURE = 2;
-
+    private String[] songs;
     /**
      * File URI for saving the taken image
      */
     private String mCurrentPhotoPath;
+
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -76,16 +74,7 @@ public class Main extends ActionBarActivity implements ServiceConnection {
                     mCurrentPhotoPath = null;
                 }
                 break;
-            case REQUEST_ENABLE_BT:
-                if (resultCode != Activity.RESULT_OK) {
-                    Toast.makeText(this,
-                            getString(R.string.bluetooth_not_enabled),
-                            Toast.LENGTH_SHORT).show();
 
-                } else {
-                    //Establish connections
-                }
-                break;
             default:
                 Log.w(TAG, "Unknown Intent Completed");
         }
@@ -97,13 +86,17 @@ public class Main extends ActionBarActivity implements ServiceConnection {
         setContentView(R.layout.activity_main);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
-
+        songs = getResources().getStringArray(R.array.songs);
         if (savedInstanceState == null) {
             gameFragment = new GameFragment();
             getSupportFragmentManager().beginTransaction()
 //                    .add(R.id.container, new ChatFragment(), "Chat")
                     .add(R.id.container, gameFragment, "Game")
                     .commit();
+
+            DialogFragment frag = SongDialogFragment.newInstance(
+                    songs, getString(R.string.select_music));
+            frag.show(getSupportFragmentManager(), "SongDialog");
         }
         startService(new Intent(this, MainService.class));
     }
@@ -128,6 +121,19 @@ public class Main extends ActionBarActivity implements ServiceConnection {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
+    }
+
+    @Override
+    public void notifyOnSelectMusic(int pos) {
+        Log.i(TAG, songs[pos]);
+        switch (pos) {
+            case 0:
+                mService.playSong(R.raw.little_lab);
+            case 1:
+                mService.playSong(R.raw.row_your_boat);
+            case 2:
+                mService.playSong(R.raw.rain_rain_go_away);
+        }
     }
 
     @Override
@@ -206,5 +212,6 @@ public class Main extends ActionBarActivity implements ServiceConnection {
     public void onServiceDisconnected(ComponentName componentName) {
         mService = null;
     }
+
 
 }
