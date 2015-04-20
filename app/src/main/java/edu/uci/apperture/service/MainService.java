@@ -3,6 +3,7 @@ package edu.uci.apperture.service;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.os.Binder;
@@ -54,8 +55,10 @@ public class MainService extends Service implements MediaPlayer.OnCompletionList
             // Need to check against the music and the beat time
             switch (btnGame) {
                 case R.id.btn_game_bottom:
+                    gameFragment.setNextColor(Color.GREEN);
                     break;
                 case R.id.btn_game_top:
+                    gameFragment.setNextColor(Color.BLUE);
                     break;
             }
         }
