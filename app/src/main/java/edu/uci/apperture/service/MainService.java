@@ -48,7 +48,7 @@ public class MainService extends Service implements MediaPlayer.OnCompletionList
     public void playSong(int rawId) {
         mediaPlayer = MediaPlayer.create(this, rawId);
         mediaPlayer.start();
-
+        Log.i(TAG, "Playing song " + rawId);
     }
 
     // Decisions to the user's interaction here
@@ -64,6 +64,14 @@ public class MainService extends Service implements MediaPlayer.OnCompletionList
                     gameFragment.setNextColor(Color.BLUE);
                     break;
             }
+        }
+    }
+
+    public void togglePlay() {
+        if (mediaPlayer.isPlaying()) {
+            mediaPlayer.pause();
+        } else {
+            mediaPlayer.start();
         }
     }
 

@@ -42,7 +42,7 @@ public class Main extends ActionBarActivity implements
      * File URI for saving the taken image
      */
     private String mCurrentPhotoPath;
-
+    private boolean isPlaying = true;
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -120,6 +120,15 @@ public class Main extends ActionBarActivity implements
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main, menu);
+        for (int menuItem = 0; menuItem < menu.size(); menuItem++) {
+            if (menu.getItem(menuItem).getItemId() == R.id.action_play) {
+                if (isPlaying) {
+                    menu.getItem(menuItem).setIcon(R.drawable.ic_action_pause);
+                } else {
+                    menu.getItem(menuItem).setIcon(R.drawable.ic_action_play);
+                }
+            }
+        }
         return true;
     }
 
@@ -129,10 +138,13 @@ public class Main extends ActionBarActivity implements
         switch (pos) {
             case 0:
                 mService.playSong(R.raw.little_lab);
+                break;
             case 1:
                 mService.playSong(R.raw.row_your_boat);
+                break;
             case 2:
                 mService.playSong(R.raw.rain_rain_go_away);
+                break;
         }
     }
 
@@ -162,8 +174,14 @@ public class Main extends ActionBarActivity implements
                     }
                 }
                 break;
+            case R.id.action_play:
+                if (mService != null) {
+                    mService.togglePlay();
+                    isPlaying = !isPlaying;
+                }
             default:
         }
+        invalidateOptionsMenu();
         return super.onOptionsItemSelected(item);
     }
 

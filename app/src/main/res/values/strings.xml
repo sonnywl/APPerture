@@ -5,6 +5,9 @@
     <string name="camera">Take Picture</string>
     <string name="bluetooth_not_enabled">Bluetooth Not Enabled</string>
     <string name="select_music">Select Music</string>
+
+    <string name="play">Play/Pause</string>
+
     <string-array name="songs">
         <item>Mary has a Little Lamb</item>
         <item>Row Row Row Your Boat</item>
