@@ -231,5 +231,4 @@ public class Main extends ActionBarActivity implements
         mService = null;
     }
 
-
 }

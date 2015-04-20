@@ -6,6 +6,21 @@ package edu.uci.apperture.fragments;
  */
 public interface IGameFragment {
 
+
+    /**
+     * Notifies the game ui the current progression
+     *
+     * @param currPos
+     */
+    void setCurrentProgress(int currPos);
+
+    /**
+     * Notifies the game ui the duration of the song
+     *
+     * @param duration
+     */
+    void setTotalDuration(int duration);
+
     /**
      * Sets the refresh rate of the ui to focus on click
      *
@@ -19,6 +34,11 @@ public interface IGameFragment {
      * @param color
      */
     void setNextColor(int color);
+
+    /**
+     * Start the Game to start drawing
+     */
+    void start();
 
     /**
      * Pause the Game from drawing
