@@ -1,10 +1,8 @@
 package edu.uci.apperture.service;
 
 import android.app.Service;
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
-import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.os.Binder;
 import android.os.Handler;
@@ -12,7 +10,9 @@ import android.os.IBinder;
 import android.os.Message;
 import android.util.Log;
 
-import java.io.IOException;
+import java.lang.ref.WeakReference;
+import java.util.HashSet;
+import java.util.concurrent.ExecutorService;
 
 import edu.uci.apperture.R;
 import edu.uci.apperture.database.DatabaseManager;
@@ -27,18 +27,20 @@ public class MainService extends Service implements MediaPlayer.OnCompletionList
     private Binder mBinder = new MainBinder();
     private DatabaseManager dbManager;
     private MediaPlayer mediaPlayer;
-    private MediaHandler mediaHandler;
+    private static MediaHandler mediaHandler;
     private IGameFragment gameFragment;
 
     private int currentPostion;
     private int songDuration;
+    private HashSet<IMediaListener> listeners;
 
     @Override
     public void onCreate() {
         super.onCreate();
+        listeners = new HashSet<IMediaListener>(2);
         dbManager = new DatabaseManager(this);
         mediaPlayer = new MediaPlayer();
-        mediaHandler = new MediaHandler();
+        mediaHandler = new MediaHandler(this);
     }
 
     public MediaPlayer getMediaPlayer() {
@@ -49,10 +51,24 @@ public class MainService extends Service implements MediaPlayer.OnCompletionList
         return dbManager;
     }
 
+    public void setCurrentPostion(int pos) {
+        currentPostion = pos;
+        gameFragment.setCurrentProgress(currentPostion);
+    }
+
+    public int getCurrentDuration() {
+        return currentPostion;
+    }
+
+    public int getSongDuration() {
+        return songDuration;
+    }
+
     // Plays the song that the user selected from the UI side
     public void playSong(int rawId) {
         mediaPlayer = MediaPlayer.create(this, rawId);
         mediaPlayer.start();
+        gameFragment.start();
         songDuration = mediaPlayer.getDuration();
         mediaHandler.sendEmptyMessage(MediaHandler.CHECK);
         Log.i(TAG, "Playing song " + rawId);
@@ -74,17 +90,29 @@ public class MainService extends Service implements MediaPlayer.OnCompletionList
         }
     }
 
+    public void registerMediaListener(IMediaListener listener) {
+        listeners.add(listener);
+    }
+
+    public void removeMediaListener(IMediaListener listener) {
+        listeners.remove(listener);
+    }
+
     public void togglePlay() {
         if (mediaPlayer.isPlaying()) {
             mediaPlayer.pause();
+            gameFragment.pause();
         } else {
             mediaPlayer.start();
+            gameFragment.resume();
         }
     }
 
     @Override
     public void onCompletion(MediaPlayer mediaPlayer) {
-        gameFragment.completed();
+        for (IMediaListener listener : listeners) {
+            listener.completed();
+        }
     }
 
     public void shutdown() {
@@ -102,31 +130,44 @@ public class MainService extends Service implements MediaPlayer.OnCompletionList
 
 
     // Handler class to check for media player's progress
-    class MediaHandler extends Handler {
+    static class MediaHandler extends Handler {
         static final int CHECK = 0;
+
+        private WeakReference<MainService> ref;
+
+        public MediaHandler(MainService service) {
+            ref = new WeakReference<>(service);
+        }
 
         @Override
         public void handleMessage(Message msg) {
             switch (msg.what) {
                 case CHECK:
-                    Thread t = new Thread(new MediaRunnable());
+                    Thread t = new Thread(new MediaRunnable(ref.get()));
                     t.start();
                     break;
             }
         }
     }
 
-    class MediaRunnable implements Runnable {
+    static class MediaRunnable implements Runnable {
+        final MainService mainService;
+
+        public MediaRunnable(MainService mService) {
+            this.mainService = mService;
+        }
 
         @Override
         public void run() {
-            currentPostion = mediaPlayer.getCurrentPosition();
-            gameFragment.setCurrentProgress(currentPostion);
-            mediaHandler.sendEmptyMessageAtTime(MediaHandler.CHECK, 200);
-            if (currentPostion >= songDuration) {
+            mainService.setCurrentPostion(
+                    mainService.getMediaPlayer().getCurrentPosition());
+            if (mainService.getCurrentDuration() >= mainService.getSongDuration()) {
                 Log.i(TAG, "Removing CHECK messages");
                 mediaHandler.removeMessages(MediaHandler.CHECK);
+            } else {
+                mediaHandler.sendEmptyMessageAtTime(MediaHandler.CHECK, 200);
             }
+
         }
     }
 

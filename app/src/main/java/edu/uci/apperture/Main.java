@@ -27,11 +27,13 @@ import java.util.Date;
 import edu.uci.apperture.fragments.GameFragment;
 import edu.uci.apperture.fragments.ImageFragment;
 import edu.uci.apperture.fragments.SongDialogFragment;
+import edu.uci.apperture.service.IMediaListener;
 import edu.uci.apperture.service.MainService;
 
 public class Main extends ActionBarActivity implements
         ServiceConnection,
-        SongDialogFragment.SongDialogListener {
+        SongDialogFragment.SongDialogListener,
+        IMediaListener {
     private static final String TAG = Main.class.getSimpleName();
     private IMainListener.APP_STATE appState = IMainListener.APP_STATE.MAIN;
     private MainService mService;
@@ -112,6 +114,7 @@ public class Main extends ActionBarActivity implements
     protected void onPause() {
         super.onPause();
         if (mService != null) {
+            mService.removeMediaListener(this);
             getApplicationContext().unbindService(this);
         }
     }
@@ -221,6 +224,7 @@ public class Main extends ActionBarActivity implements
     @Override
     public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
         mService = ((MainService.MainBinder) iBinder).getService();
+        mService.registerMediaListener(this);
         if (gameFragment != null) {
             mService.setGameFragment(gameFragment);
         }
@@ -231,4 +235,22 @@ public class Main extends ActionBarActivity implements
         mService = null;
     }
 
+    @Override
+    public void start() {
+        isPlaying = true;
+    }
+
+    @Override
+    public void pause() {
+    }
+
+    @Override
+    public void resume() {
+    }
+
+    @Override
+    public void completed() {
+        isPlaying = false;
+        invalidateOptionsMenu();
+    }
 }
