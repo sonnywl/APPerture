@@ -92,7 +92,7 @@ public class Main extends ActionBarActivity implements
                 if (isPlaying) {
                     menu.getItem(menuItem).setIcon(R.drawable.ic_action_pause);
                 } else {
-                    menu.getItem(menuItem).setIcon(R.drawable.ic_action_play);
+                    menu.getItem(menuItem).setIcon(R.drawable.ic_action_play_dark);
                 }
             }
         }
@@ -118,8 +118,6 @@ public class Main extends ActionBarActivity implements
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.action_settings:
-                break;
             case R.id.action_play:
                 if (mService != null) {
                     mService.togglePlay();
