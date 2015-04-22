@@ -135,6 +135,7 @@ public class Main extends ActionBarActivity implements
             case MAIN:
                 mService.shutdown();
                 stopService(new Intent(this, MainService.class));
+                finish();
             default:
                 super.onBackPressed();
         }
@@ -175,5 +176,10 @@ public class Main extends ActionBarActivity implements
     public void completed() {
         isPlaying = false;
         invalidateOptionsMenu();
+        DialogFragment frag = SongDialogFragment.newInstance(
+                songs, getString(R.string.select_music));
+        frag.show(getSupportFragmentManager(), "SongDialog");
+
+        Log.i(TAG, "Completed notified");
     }
 }

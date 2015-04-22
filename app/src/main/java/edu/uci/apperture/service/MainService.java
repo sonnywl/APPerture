@@ -67,6 +67,7 @@ public class MainService extends Service implements MediaPlayer.OnCompletionList
     // Plays the song that the user selected from the UI side
     public void playSong(int rawId) {
         mediaPlayer = MediaPlayer.create(this, rawId);
+        mediaPlayer.setOnCompletionListener(this);
         mediaPlayer.start();
         gameFragment.start();
         songDuration = mediaPlayer.getDuration();
