@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_margin="@dimen/activity_horizontal_margin"
+                android:background="#ffedecee">
+
+    <ImageView
+        android:layout_marginTop="50dp"
+        android:id="@+id/start_logo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/logo_small"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:adjustViewBounds="true"/>
+
+    <TableLayout
+        android:layout_below="@+id/start_logo"
+        android:layout_marginTop="120dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal">
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center|center_horizontal">
+
+            <ImageView
+                style="@style/btn_start"
+                android:id="@+id/btn_start_game"
+                android:clickable="true"
+                android:src="@drawable/ic_action_play"
+                android:background="@drawable/btn_start"
+                android:paddingTop="8dp"
+                android:paddingBottom="8dp"
+                android:paddingRight="8dp"
+                android:paddingEnd="8dp"
+                android:paddingLeft="15dp"
+                android:paddingStart="15dp"
+                android:layout_width="@dimen/btn_diameter"
+                android:layout_height="@dimen/btn_diameter"/>
+        </TableRow>
+
+        <TableRow
+            android:layout_margin="8dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center|center_horizontal">
+
+            <Button
+                style="@style/btn_start"
+                android:id="@+id/btn_start_player1"
+                android:background="@drawable/btn_start"
+                android:layout_width="@dimen/btn_diameter"
+                android:layout_height="@dimen/btn_diameter"
+                android:text="1"/>
+
+            <View
+                android:layout_width="@dimen/center_pad"
+                android:layout_height="match_parent"/>
+
+            <Button
+                style="@style/btn_start"
+                android:id="@+id/btn_start_player2"
+                android:background="@drawable/btn_start"
+                android:layout_width="@dimen/btn_diameter"
+                android:layout_height="@dimen/btn_diameter"
+                android:text="2"
+                />
+        </TableRow>
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center|center_horizontal">
+
+            <ImageView
+                style="@style/btn_start"
+                android:clickable="true"
+                android:padding="5dp"
+                android:id="@+id/btn_start_option"
+                android:src="@drawable/ic_action_settings"
+                android:background="@drawable/btn_start"
+                android:layout_width="@dimen/btn_diameter"
+                android:layout_height="@dimen/btn_diameter"/>
+        </TableRow>
+    </TableLayout>
+</RelativeLayout>

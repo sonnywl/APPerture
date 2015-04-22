@@ -7,6 +7,9 @@
     <string name="select_music">Select Music</string>
 
     <string name="play">Play/Pause</string>
+    <string name="library_des">buzzandroid</string>
+    <string name="about">Alice Wen\nFormosa Lam\nIsabel Amador\nNeftali Watkinson\nSonny Lin\n
+    </string>
 
     <string-array name="songs">
         <item>Mary has a Little Lamb</item>

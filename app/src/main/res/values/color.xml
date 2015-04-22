@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <item name="btn_base" type="color">#ffefefef</item>
+    <item name="btn_focused" type="color">#ffcccccc</item>
+    <item name="btn_stroke" type="color">#A03da8cd</item>
+</resources>

@@ -14,7 +14,7 @@
         android:title="@string/camera"
         android:icon="@drawable/ic_action_camera"
         android:orderInCategory="100"
-        app:showAsAction="ifRoom"/>
+        app:showAsAction="never"/>
 
     <item
         android:id="@+id/action_settings"
