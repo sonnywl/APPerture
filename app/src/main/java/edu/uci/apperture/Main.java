@@ -47,42 +47,6 @@ public class Main extends ActionBarActivity implements
     private boolean isPlaying = true;
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        switch (requestCode) {
-            case REQUEST_IMAGE_CAPTURE:
-                if (resultCode == Activity.RESULT_OK && mCurrentPhotoPath != null) {
-
-                    ImageFragment frag = (ImageFragment) getSupportFragmentManager().findFragmentByTag("Chat");
-                    int width = frag.getImageView().getWidth();
-                    int height = frag.getImageView().getHeight();
-
-                    BitmapFactory.Options factoryOptions = new BitmapFactory.Options();
-
-                    factoryOptions.inJustDecodeBounds = true;
-                    BitmapFactory.decodeFile(mCurrentPhotoPath, factoryOptions);
-
-                    int imageWidth = factoryOptions.outWidth;
-                    int imageHeight = factoryOptions.outHeight;
-
-                    int scaleFactor = Math.min(imageWidth / width, imageHeight / height);
-
-                    factoryOptions.inJustDecodeBounds = false;
-                    factoryOptions.inSampleSize = scaleFactor;
-                    factoryOptions.inPurgeable = true;
-                    Bitmap bitmap = BitmapFactory.decodeFile(mCurrentPhotoPath, factoryOptions);
-                    frag.getImageView().setImageBitmap(bitmap);
-                    mCurrentPhotoPath = null;
-                }
-                break;
-
-            default:
-                Log.w(TAG, "Unknown Intent Completed");
-        }
-    }
-
-    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
@@ -156,27 +120,6 @@ public class Main extends ActionBarActivity implements
         switch (item.getItemId()) {
             case R.id.action_settings:
                 break;
-            case R.id.action_camera:
-                Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                // Ensure that there's a camera activity to handle the intent
-                if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
-                    // Create the File where the photo should go
-                    File photoFile = null;
-                    try {
-                        photoFile = createImageFile();
-                        mCurrentPhotoPath = photoFile.getPath();
-                    } catch (IOException ex) {
-                        // Error occurred while creating the File
-                    }
-
-                    // Continue only if the File was successfully created
-                    if (photoFile != null) {
-                        takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT,
-                                Uri.fromFile(photoFile));
-                        startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
-                    }
-                }
-                break;
             case R.id.action_play:
                 if (mService != null) {
                     mService.togglePlay();
@@ -197,24 +140,6 @@ public class Main extends ActionBarActivity implements
             default:
                 super.onBackPressed();
         }
-    }
-
-
-    private File createImageFile() throws IOException {
-        // Create an image file name
-        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-        String imageFileName = "apperture_" + timeStamp;
-        File storageDir = Environment.getExternalStoragePublicDirectory(
-                Environment.DIRECTORY_PICTURES);
-        File image = File.createTempFile(
-                imageFileName,  /* prefix */
-                ".jpg",         /* suffix */
-                storageDir      /* directory */
-        );
-
-        // Save a file: path for use with ACTION_VIEW intents
-        mCurrentPhotoPath = "file:" + image.getAbsolutePath();
-        return image;
     }
 
     public MainService getService() {

@@ -14,6 +14,7 @@ import android.support.v7.widget.ShareActionProvider;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.WindowManager;
 
 import edu.uci.apperture.fragments.AboutDialogFragment;
 import edu.uci.apperture.fragments.HSVColorPickerDialog;
@@ -31,6 +32,8 @@ public class Start extends ActionBarActivity implements View.OnClickListener, HS
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_start);
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+                WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
         mPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         int p1Color = mPreferences.getInt("PlayerOneColor", 0xFF458B00);

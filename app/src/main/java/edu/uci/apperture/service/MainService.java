@@ -159,15 +159,18 @@ public class MainService extends Service implements MediaPlayer.OnCompletionList
 
         @Override
         public void run() {
-            mainService.setCurrentPostion(
-                    mainService.getMediaPlayer().getCurrentPosition());
-            if (mainService.getCurrentDuration() >= mainService.getSongDuration()) {
-                Log.i(TAG, "Removing CHECK messages");
-                mediaHandler.removeMessages(MediaHandler.CHECK);
-            } else {
-                mediaHandler.sendEmptyMessageAtTime(MediaHandler.CHECK, 200);
+            try {
+                mainService.setCurrentPostion(
+                        mainService.getMediaPlayer().getCurrentPosition());
+                if (mainService.getCurrentDuration() >= mainService.getSongDuration()) {
+                    Log.i(TAG, "Removing CHECK messages");
+                    mediaHandler.removeMessages(MediaHandler.CHECK);
+                } else {
+                    mediaHandler.sendEmptyMessageAtTime(MediaHandler.CHECK, 200);
+                }
+            } catch (Exception e) {
+                // TODO shutdown mediaplayer and back out
             }
-
         }
     }
 
