@@ -34,7 +34,7 @@ public interface IGameFragment extends IMediaListener {
      *
      * @param color
      */
-    void setNextColor(int color);
+    void setNextColor(int color, int circle);
 
-
+    GameFragment.GameView getGameView();
 }

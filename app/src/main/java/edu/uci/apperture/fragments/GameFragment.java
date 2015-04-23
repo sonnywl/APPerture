@@ -4,6 +4,8 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.media.AudioManager;
+import android.media.SoundPool;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -53,14 +55,19 @@ public class GameFragment extends Fragment implements View.OnClickListener, IGam
         gameView.pause();
     }
 
+    SoundPool sp = new SoundPool(10, AudioManager.STREAM_MUSIC, 0);
+    int soundIds[] = new int[10];
+
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.btn_game_bottom:
                 ((Main) getActivity()).getService().notifyOnClick(R.id.btn_game_bottom);
+                sp.play(soundIds[0], 1, 1, 1, 0, 1);
                 break;
             case R.id.btn_game_top:
                 ((Main) getActivity()).getService().notifyOnClick(R.id.btn_game_top);
+                sp.play(soundIds[1], 1, 1, 1, 0, 1);
                 break;
         }
     }
@@ -85,9 +92,10 @@ public class GameFragment extends Fragment implements View.OnClickListener, IGam
     }
 
     @Override
-    public void setNextColor(int color) {
-        gameView.setColor(color);
+    public void setNextColor(int color, int circle) {
+        gameView.setColor(color, circle);
     }
+
 
     public void start() {
         isCompleted = false;
@@ -114,7 +122,7 @@ public class GameFragment extends Fragment implements View.OnClickListener, IGam
         private Thread gameThread;
         private volatile boolean isRunning = true;
         private SurfaceHolder surfaceHolder;
-        private Paint mPaint;
+        private Paint mPaint, mPaint1, mPaint2;
 
         public GameView(Context context) {
             super(context);
@@ -124,9 +132,19 @@ public class GameFragment extends Fragment implements View.OnClickListener, IGam
         private void init() {
             surfaceHolder = getHolder();
             mPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-            mPaint.setColor(Color.BLUE);
-            mPaint.setStyle(Paint.Style.STROKE);
+            mPaint.setColor(Color.GRAY);
+            mPaint.setStyle(Paint.Style.FILL_AND_STROKE);
             mPaint.setStrokeWidth(20);
+
+            mPaint1 = new Paint(Paint.ANTI_ALIAS_FLAG);
+            mPaint1.setColor(Color.GRAY);
+            mPaint1.setStyle(Paint.Style.FILL_AND_STROKE);
+            mPaint1.setStrokeWidth(20);
+
+            mPaint2 = new Paint(Paint.ANTI_ALIAS_FLAG);
+            mPaint2.setColor(Color.GRAY);
+            mPaint2.setStyle(Paint.Style.FILL_AND_STROKE);
+            mPaint2.setStrokeWidth(20);
         }
 
         @Override
@@ -135,7 +153,9 @@ public class GameFragment extends Fragment implements View.OnClickListener, IGam
             int minRadius = 50;
             int maxRadius = 220;
             int radius = 120;
-
+            int radius2 = 90;
+            soundIds[0] = sp.load(this.getContext(), R.raw.bam, 1);
+            soundIds[1] = sp.load(this.getContext(), R.raw.drum2, 1);
             while (isRunning) {
                 if (!surfaceHolder.getSurface().isValid()) {
                     continue;
@@ -146,6 +166,8 @@ public class GameFragment extends Fragment implements View.OnClickListener, IGam
                     synchronized (surfaceHolder) {
                         canvas.drawColor(Color.WHITE);
                         canvas.drawCircle(getWidth() / 2, getHeight() / 2, radius, mPaint);
+                        canvas.drawCircle(getWidth() / 2, getHeight() / 4, radius2, mPaint1);
+                        canvas.drawCircle(getWidth() / 2, getHeight() * 3 / 4, radius2, mPaint2);
                     }
 
                 } finally {
@@ -153,19 +175,42 @@ public class GameFragment extends Fragment implements View.OnClickListener, IGam
                         surfaceHolder.unlockCanvasAndPost(canvas);
                     }
                 }
-                radius = increasing ? (radius + 1) : (radius - 1);
+                /*radius = increasing ? (radius + 1) : (radius - 1);
                 if (radius <= minRadius) {
                     increasing = true;
                 } else if (radius >= maxRadius) {
                     increasing = false;
-                }
+                }*/
             }
         }
 
-        public void setColor(int color) {
-            mPaint.setColor(color);
+        public void setColor(int color, int circle) {
+            switch (circle) {
+                case 1:
+                    mPaint1.setColor(color);
+                    break;
+                case 2:
+                    mPaint2.setColor(color);
+                    break;
+                default:
+                    mPaint.setColor(color);
+            }
+
         }
 
+        public int getColor(int circle) {
+
+            switch (circle) {
+                case 1:
+                    return mPaint1.getColor();
+
+                case 2:
+                    return mPaint2.getColor();
+                default:
+                    return mPaint.getColor();
+            }
+
+        }
 
         public void resume() {
             isRunning = true;

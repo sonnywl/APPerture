@@ -2,17 +2,21 @@ package edu.uci.apperture.service;
 
 import android.app.Service;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.media.MediaPlayer;
 import android.os.Binder;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
+import android.preference.PreferenceManager;
 import android.util.Log;
 
 import java.lang.ref.WeakReference;
 import java.util.HashSet;
+import java.util.Random;
 import java.util.concurrent.ExecutorService;
+import java.util.concurrent.TimeUnit;
 
 import edu.uci.apperture.R;
 import edu.uci.apperture.database.DatabaseManager;
@@ -73,20 +77,58 @@ public class MainService extends Service implements MediaPlayer.OnCompletionList
         songDuration = mediaPlayer.getDuration();
         mediaHandler.sendEmptyMessage(MediaHandler.CHECK);
         Log.i(TAG, "Playing song " + rawId);
-    }
 
+    }
+    int flag1=0;
+    int flag2=0;
+    int flag=0;
     // Decisions to the user's interaction here
     public void notifyOnClick(int btnGame) {
+
         if (gameFragment != null) {
-            // TODO either pause or notify the UI to pause
+                        // TODO either pause or notify the UI to pause
             // Need to check against the music and the beat time
+
             switch (btnGame) {
                 case R.id.btn_game_bottom:
-                    gameFragment.setNextColor(Color.GREEN);
+                    if (gameFragment.getGameView().getColor(2) != Color.GRAY) {
+                        flag1=0;
+                        gameFragment.setNextColor(Color.GRAY, 2);
+                        if(!this.getMediaPlayer().isPlaying()&&this.getMediaPlayer().getCurrentPosition()<this.getMediaPlayer().getDuration()-1300)
+                            this.togglePlay();
+                    }
+                    if(gameFragment.getGameView().getColor(0) != Color.GRAY){
+                        flag1=1;
+                        flag=flag1+flag2;
+                        if(flag>1){
+                            flag=0;
+                            gameFragment.setNextColor(Color.GRAY, 0);
+                            if(!this.getMediaPlayer().isPlaying()&&this.getMediaPlayer().getCurrentPosition()<this.getMediaPlayer().getDuration()-1300)
+                                this.togglePlay();
+
+                    }}
+
+
                     break;
                 case R.id.btn_game_top:
-                    gameFragment.setNextColor(Color.BLUE);
+                    if (gameFragment.getGameView().getColor(1) != Color.GRAY) {
+                        flag2=0;
+                        gameFragment.setNextColor(Color.GRAY, 1);
+                        if(!this.getMediaPlayer().isPlaying()&&this.getMediaPlayer().getCurrentPosition()<this.getMediaPlayer().getDuration()-1300)
+                            this.togglePlay();
+                    }
+                    if(gameFragment.getGameView().getColor(0) != Color.GRAY){
+                        flag2=1;
+                        flag=flag1+flag2;
+                        if(flag>1) {
+                            flag = 0;
+                            gameFragment.setNextColor(Color.GRAY, 0);
+                            if(!this.getMediaPlayer().isPlaying()&&this.getMediaPlayer().getCurrentPosition()<this.getMediaPlayer().getDuration()-1300)
+                                this.togglePlay();
+                        }
+                    }
                     break;
+
             }
         }
     }
@@ -131,10 +173,11 @@ public class MainService extends Service implements MediaPlayer.OnCompletionList
 
 
     // Handler class to check for media player's progress
-    static class MediaHandler extends Handler {
+     class MediaHandler extends Handler {
         static final int CHECK = 0;
 
         private WeakReference<MainService> ref;
+        private Thread messageThread;
 
         public MediaHandler(MainService service) {
             ref = new WeakReference<>(service);
@@ -142,32 +185,73 @@ public class MainService extends Service implements MediaPlayer.OnCompletionList
 
         @Override
         public void handleMessage(Message msg) {
+            SharedPreferences mPreferences = PreferenceManager.getDefaultSharedPreferences(ref.get());
+            int p1Color = mPreferences.getInt("PlayerOneColor", 0xFF458B00);
+            int p2Color = mPreferences.getInt("PlayerTwoColor", Color.BLUE);
             switch (msg.what) {
                 case CHECK:
-                    Thread t = new Thread(new MediaRunnable(ref.get()));
-                    t.start();
+                    Log.i(TAG, "Thread started");
+                    messageThread = new Thread(new MediaRunnable(ref.get(), p1Color, p2Color));
+                    messageThread.start();
                     break;
             }
         }
     }
 
-    static class MediaRunnable implements Runnable {
+    class MediaRunnable implements Runnable {
         final MainService mainService;
+        final int colorP1, colorP2;
+        Random r = new Random();
+        int i = 0;
 
-        public MediaRunnable(MainService mService) {
+        public MediaRunnable(MainService mService, int color1, int color2) {
             this.mainService = mService;
+            this.colorP1 = color1;
+            this.colorP2 = color2;
         }
 
         @Override
         public void run() {
+
             try {
-                mainService.setCurrentPostion(
-                        mainService.getMediaPlayer().getCurrentPosition());
+                while (mainService.getMediaPlayer().isPlaying()) {
+                    i = r.nextInt(3) + 1;
+                    switch (i) {
+                        case 1:
+                            mainService.gameFragment.setNextColor(colorP1, 1);
+                            mainService.gameFragment.setNextColor(Color.GRAY, 2);
+                            mainService.gameFragment.setNextColor(Color.GRAY, 0);
+                            break;
+                        case 2:
+                            mainService.gameFragment.setNextColor(colorP2, 2);
+                            mainService.gameFragment.setNextColor(Color.GRAY, 0);
+                            mainService.gameFragment.setNextColor(Color.GRAY, 1);
+
+                            break;
+                        case 3:
+                            mainService.gameFragment.setNextColor(0xff34a238, 0);
+                            mainService.gameFragment.setNextColor(Color.GRAY, 1);
+                            mainService.gameFragment.setNextColor(Color.GRAY, 2);
+                            break;
+                        default:
+
+                    }
+                    try {
+                        TimeUnit.MILLISECONDS.sleep(1300);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                    if(gameFragment.getGameView().getColor(1) != Color.GRAY||gameFragment.getGameView().getColor(2) != Color.GRAY||gameFragment.getGameView().getColor(0) != Color.GRAY) {
+                       if(mainService.getMediaPlayer().getCurrentPosition()<mainService.getMediaPlayer().getDuration()-1300)
+                        this.mainService.togglePlay();
+                    }
+
+                }
                 if (mainService.getCurrentDuration() >= mainService.getSongDuration()) {
                     Log.i(TAG, "Removing CHECK messages");
                     mediaHandler.removeMessages(MediaHandler.CHECK);
                 } else {
-                    mediaHandler.sendEmptyMessageAtTime(MediaHandler.CHECK, 200);
+                    mediaHandler.sendEmptyMessageAtTime(MediaHandler.CHECK, 600);
                 }
             } catch (Exception e) {
                 // TODO shutdown mediaplayer and back out

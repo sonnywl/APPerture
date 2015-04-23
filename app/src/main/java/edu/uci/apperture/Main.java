@@ -104,12 +104,15 @@ public class Main extends ActionBarActivity implements
         Log.i(TAG, songs[pos]);
         switch (pos) {
             case 0:
+                mService.shutdown();
                 mService.playSong(R.raw.little_lab);
                 break;
             case 1:
+                mService.shutdown();
                 mService.playSong(R.raw.row_your_boat);
                 break;
             case 2:
+                mService.shutdown();
                 mService.playSong(R.raw.rain_rain_go_away);
                 break;
         }

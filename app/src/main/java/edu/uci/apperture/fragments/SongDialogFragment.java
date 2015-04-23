@@ -27,7 +27,7 @@ public class SongDialogFragment extends DialogFragment {
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         final String[] songs = getArguments().getStringArray(KEY);
         final String title = getArguments().getString(TITLE);
-        return new AlertDialog.Builder(getActivity())
+        Dialog dl = new AlertDialog.Builder(getActivity())
                 .setTitle(title)
                 .setItems(songs, new DialogInterface.OnClickListener() {
                     @Override
@@ -38,6 +38,9 @@ public class SongDialogFragment extends DialogFragment {
                     }
                 })
                 .create();
+        dl.setCancelable(false);
+        dl.setCanceledOnTouchOutside(false);
+        return dl;
     }
 
     public interface SongDialogListener {
