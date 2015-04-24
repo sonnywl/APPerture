@@ -16,7 +16,7 @@
             android:background="@drawable/drum_top"
             android:id="@+id/btn_game_top"
             android:layout_width="match_parent"
-            android:layout_height="220dp"
+            android:layout_height="200dp"
             android:layout_alignParentTop="true"
             android:scaleType="fitXY"
             android:alpha="1"/>
@@ -50,7 +50,7 @@
             android:background="@drawable/drum_bottom"
             android:id="@+id/btn_game_bottom"
             android:layout_width="match_parent"
-            android:layout_height="220dp"
+            android:layout_height="200dp"
             android:layout_alignParentBottom="true"
             android:scaleType="fitXY"
             android:alpha="1"/>
