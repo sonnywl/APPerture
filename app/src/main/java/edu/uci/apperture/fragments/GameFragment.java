@@ -29,10 +29,6 @@ import edu.uci.apperture.service.MainService;
  */
 public class GameFragment extends Fragment implements View.OnClickListener, IGameFragment {
     private GameView gameView;
-    private MainService mSerivce;
-    private volatile int currentPosition;
-    private int songDuration;
-    private boolean isCompleted = false;
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -81,28 +77,12 @@ public class GameFragment extends Fragment implements View.OnClickListener, IGam
     }
 
     @Override
-    public void setCurrentProgress(int currPos) {
-        currentPosition = currPos;
-    }
-
-    @Override
-    public void setTotalDuration(int duration) {
-        songDuration = duration;
-    }
-
-    @Override
-    public void setFocusSpeed(int speed) {
-
-    }
-
-    @Override
     public void setNextColor(int color, int circle) {
         gameView.setColor(color, circle);
     }
 
 
     public void start() {
-        isCompleted = false;
     }
 
     // Interactions from the media player from the MainService
@@ -118,7 +98,6 @@ public class GameFragment extends Fragment implements View.OnClickListener, IGam
 
     @Override
     public void completed() {
-        isCompleted = true;
     }
 
     public class GameView extends SurfaceView implements Runnable {
@@ -181,12 +160,6 @@ public class GameFragment extends Fragment implements View.OnClickListener, IGam
                         surfaceHolder.unlockCanvasAndPost(canvas);
                     }
                 }
-                /*radius = increasing ? (radius + 1) : (radius - 1);
-                if (radius <= minRadius) {
-                    increasing = true;
-                } else if (radius >= maxRadius) {
-                    increasing = false;
-                }*/
             }
         }
 
