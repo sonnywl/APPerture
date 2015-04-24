@@ -4,6 +4,8 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.PixelFormat;
+import android.graphics.PorterDuff;
 import android.media.AudioManager;
 import android.media.SoundPool;
 import android.os.Bundle;
@@ -38,6 +40,7 @@ public class GameFragment extends Fragment implements View.OnClickListener, IGam
         View view = inflater.inflate(R.layout.fragment_game, container, false);
         FrameLayout frameLayout = (FrameLayout) view.findViewById(R.id.game_view);
         frameLayout.addView(gameView);
+        gameView.setZOrderOnTop(true);
         view.findViewById(R.id.game_controller).bringToFront();
         view.findViewById(R.id.btn_game_bottom).setOnClickListener(this);
         view.findViewById(R.id.btn_game_top).setOnClickListener(this);
@@ -132,6 +135,8 @@ public class GameFragment extends Fragment implements View.OnClickListener, IGam
 
         private void init() {
             surfaceHolder = getHolder();
+            surfaceHolder.setFormat(PixelFormat.TRANSLUCENT);
+
             mPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
             mPaint.setColor(Color.GRAY);
             mPaint.setStyle(Paint.Style.FILL_AND_STROKE);
@@ -165,7 +170,7 @@ public class GameFragment extends Fragment implements View.OnClickListener, IGam
                 try {
                     canvas = surfaceHolder.lockCanvas();
                     synchronized (surfaceHolder) {
-                        canvas.drawColor(Color.WHITE);
+                        canvas.drawColor(0, PorterDuff.Mode.CLEAR);
                         canvas.drawCircle(getWidth() / 2, getHeight() / 2, radius, mPaint);
                         canvas.drawCircle(getWidth() / 2, getHeight() / 4, radius2, mPaint1);
                         canvas.drawCircle(getWidth() / 2, getHeight() * 3 / 4, radius2, mPaint2);
