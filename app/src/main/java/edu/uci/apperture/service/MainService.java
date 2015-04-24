@@ -59,8 +59,6 @@ public class MainService extends Service implements MediaPlayer.OnCompletionList
         mediaPlayer.start();
         gameFragment.start();
         mediaHandler.sendEmptyMessage(MediaHandler.CHECK);
-        Log.i(TAG, "Playing song " + rawId);
-
     }
 
     int flag1 = 0;
@@ -141,17 +139,6 @@ public class MainService extends Service implements MediaPlayer.OnCompletionList
 
     @Override
     public void onCompletion(MediaPlayer mediaPlayer) {
-      /*  AlertDialog.Builder builder1 = new AlertDialog.Builder(this.getApplicationContext());
-        builder1.setMessage("Yay you did it!!!");
-        builder1.setCancelable(true);
-        builder1.setPositiveButton("OK",
-                new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        dialog.cancel();
-                    }
-                });
-        AlertDialog alert11 = builder1.create();
-        alert11.show();*/
         for (IMediaListener listener : listeners) {
             listener.completed();
         }

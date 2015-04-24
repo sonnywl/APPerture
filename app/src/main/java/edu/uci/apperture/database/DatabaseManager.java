@@ -15,13 +15,10 @@ import java.util.ArrayList;
 /**
  * SQL Lite Manager for storing text, image, sound, and color info for each chat user
  * <p/>
- * There are currently two tables
- * <p/>
- * User - Contains all the users/devices that the application has encountered
- * |userid|username|
+ * There are currently one tables
  * <p/>
  * Chat - Flat layout for the questions that are encountered
- * |userid|date|color_id|sound_id|image|blob_text|
+ * |userid|userid|color_id|color_id|sound_id|blob_text|
  * <p/>
  * <p/>
  * Created by Sonny on 4/15/2015.

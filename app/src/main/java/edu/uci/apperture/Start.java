@@ -11,6 +11,7 @@ import android.media.MediaPlayer;
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.ShareActionProvider;
@@ -20,6 +21,7 @@ import android.view.View;
 import android.view.WindowManager;
 
 import edu.uci.apperture.fragments.AboutDialogFragment;
+import edu.uci.apperture.fragments.CongratsDialogFragment;
 import edu.uci.apperture.fragments.HSVColorPickerDialog;
 
 /**
