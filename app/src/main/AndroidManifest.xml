@@ -19,7 +19,7 @@
             android:name=".Start"
             android:label="Boom Boom Bam!"
             android:screenOrientation="portrait"
-            android:theme="@style/Theme.AppCompat.Light">
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
 
@@ -30,7 +30,7 @@
             android:name=".Main"
             android:label="Boom Boom Bam!"
             android:screenOrientation="portrait"
-            android:theme="@style/Theme.AppCompat.Light">
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar">
 
         </activity>
 

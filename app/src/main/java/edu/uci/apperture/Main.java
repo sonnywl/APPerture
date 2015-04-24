@@ -1,17 +1,12 @@
 package edu.uci.apperture;
 
-import android.app.Activity;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.net.Uri;
+import android.media.MediaPlayer;
 import android.os.Bundle;
-import android.os.Environment;
 import android.os.IBinder;
-import android.provider.MediaStore;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
@@ -19,13 +14,9 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.WindowManager;
 
-import java.io.File;
-import java.io.IOException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.util.concurrent.TimeUnit;
 
 import edu.uci.apperture.fragments.GameFragment;
-import edu.uci.apperture.fragments.ImageFragment;
 import edu.uci.apperture.fragments.SongDialogFragment;
 import edu.uci.apperture.service.IMediaListener;
 import edu.uci.apperture.service.MainService;
@@ -48,6 +39,7 @@ public class Main extends ActionBarActivity implements
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
@@ -69,7 +61,9 @@ public class Main extends ActionBarActivity implements
 
     @Override
     protected void onStart() {
+
         super.onStart();
+
         getApplicationContext().bindService(
                 new Intent(this, MainService.class), this, Context.BIND_AUTO_CREATE);
     }
@@ -178,6 +172,15 @@ public class Main extends ActionBarActivity implements
     @Override
     public void completed() {
         isPlaying = false;
+        MediaPlayer mp = MediaPlayer.create(this, R.raw.yay);
+        mp.start();
+        try {
+            TimeUnit.MILLISECONDS.sleep(5000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        mp.stop();
+        mp.release();
         invalidateOptionsMenu();
         DialogFragment frag = SongDialogFragment.newInstance(
                 songs, getString(R.string.select_music));

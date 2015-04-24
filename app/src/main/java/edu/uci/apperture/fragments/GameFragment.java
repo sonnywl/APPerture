@@ -15,6 +15,7 @@ import android.view.SurfaceView;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
+import android.widget.Switch;
 
 import edu.uci.apperture.Main;
 import edu.uci.apperture.R;

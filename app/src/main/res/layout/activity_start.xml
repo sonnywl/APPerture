@@ -7,19 +7,17 @@
                 android:background="#ffedecee">
 
     <ImageView
-        android:layout_marginTop="50dp"
         android:id="@+id/start_logo"
-        android:layout_width="wrap_content"
+        android:layout_width="350dp"
         android:layout_height="wrap_content"
         android:src="@drawable/logo_small"
+        android:adjustViewBounds="true"
         android:layout_alignParentTop="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"
-        android:adjustViewBounds="true"/>
+        android:layout_centerHorizontal="true" />
 
     <TableLayout
         android:layout_below="@+id/start_logo"
-        android:layout_marginTop="100dp"
+        android:layout_marginTop="80dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center_horizontal">
@@ -89,4 +87,14 @@
                 android:layout_height="@dimen/btn_diameter"/>
         </TableRow>
     </TableLayout>
+    <ImageView
+        android:layout_marginTop="200dp"
+        android:id="@+id/apperture_logo"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:src="@drawable/logo_small2"
+        android:layout_alignParentBottom="true"
+        android:adjustViewBounds="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
 </RelativeLayout>

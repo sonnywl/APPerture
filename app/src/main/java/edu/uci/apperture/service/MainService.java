@@ -1,6 +1,9 @@
 package edu.uci.apperture.service;
 
+import android.app.AlertDialog;
+import android.app.DialogFragment;
 import android.app.Service;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
@@ -153,6 +156,17 @@ public class MainService extends Service implements MediaPlayer.OnCompletionList
 
     @Override
     public void onCompletion(MediaPlayer mediaPlayer) {
+      /*  AlertDialog.Builder builder1 = new AlertDialog.Builder(this.getApplicationContext());
+        builder1.setMessage("Yay you did it!!!");
+        builder1.setCancelable(true);
+        builder1.setPositiveButton("OK",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        dialog.cancel();
+                    }
+                });
+        AlertDialog alert11 = builder1.create();
+        alert11.show();*/
         for (IMediaListener listener : listeners) {
             listener.completed();
         }

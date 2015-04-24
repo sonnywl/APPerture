@@ -1,11 +1,14 @@
 package edu.uci.apperture;
 
+import android.annotation.TargetApi;
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
+import android.media.MediaPlayer;
+import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.view.MenuItemCompat;
@@ -27,6 +30,7 @@ public class Start extends ActionBarActivity implements View.OnClickListener, HS
     private static final String TAG = Start.class.getSimpleName();
     private SharedPreferences mPreferences;
     private int playerSelection = 0;
+    MediaPlayer mp;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,6 +42,9 @@ public class Start extends ActionBarActivity implements View.OnClickListener, HS
         mPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         int p1Color = mPreferences.getInt("PlayerOneColor", 0xFF458B00);
         int p2Color = mPreferences.getInt("PlayerTwoColor", Color.BLUE);
+
+        mp = MediaPlayer.create(this, R.raw.intro_m);
+        mp.start();
 
         findViewById(R.id.btn_start_player1).setOnClickListener(this);
         findViewById(R.id.btn_start_player2).setOnClickListener(this);
@@ -66,6 +73,7 @@ public class Start extends ActionBarActivity implements View.OnClickListener, HS
                 dialog.show(this.getSupportFragmentManager(), "About");
                 break;
             case R.id.btn_start_game:
+                mp.stop();
                 startActivity(new Intent(this, Main.class));
                 break;
         }
@@ -73,6 +81,8 @@ public class Start extends ActionBarActivity implements View.OnClickListener, HS
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
+        MediaPlayer mp = MediaPlayer.create(this, R.raw.intro_m);
+        mp.start();
         getMenuInflater().inflate(R.menu.menu_start, menu);
         // Get the menu item.
         MenuItem menuItem = menu.findItem(R.id.menu_share);
@@ -107,6 +117,7 @@ public class Start extends ActionBarActivity implements View.OnClickListener, HS
         dialog.show();
     }
 
+    @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
     private void setButtonBgColor(int resourceId, int color) {
         Drawable draw = getResources().getDrawable(R.drawable.btn_start);
         draw.setColorFilter(color, PorterDuff.Mode.MULTIPLY);
