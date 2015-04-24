@@ -32,33 +32,22 @@ public class DatabaseManager {
     private static final String DB_TABLE_CHAT = "CHAT";
     private static final String DATE = "date";
     private static final String SOUND = "sound_url";
-    private static final String COLOR = "color_value";
-    private static final String IMAGE = "image";
-    private static final String QUESTION = "question";
-    private static final String RESPONSE = "response";
+    private static final String GAME = "game_log";
+    private static final String PLAYER_1 = "player_1";
+    private static final String PLAYER_2 = "player_2";
 
     private static final String DB_TABLE_USERS = "USERS";
-    private static final String USER_ID = "user_id";
-    private static final String USER_NAME = "username";
 
-    private final String[] userColumns = new String[]{USER_ID, USER_NAME};
-    private final String[] chatColumns = new String[]{USER_ID, DATE, COLOR, SOUND, IMAGE, QUESTION, RESPONSE};
-
-    private static final String DB_CREATE_USERS =
-            "CREATE TABLE IF NOT EXISTS " + DB_TABLE_USERS + " (" +
-                    USER_ID + " INTEGER PRIMARY KEY, " +
-                    USER_NAME + " TEXT);";
+    private final String[] chatColumns = new String[]{DATE, SOUND, GAME, PLAYER_1, PLAYER_2};
 
 
     private static final String DB_CREATE_CHAT =
             "CREATE TABLE IF NOT EXISTS " + DB_TABLE_CHAT + " (" +
-                    USER_ID + " TEXT PRIMARY KEY, " +
-                    DATE + " INTEGER, " +
-                    COLOR + " INTEGER, " +
+                    DATE + " INTEGER PRIMARY KEY, " +
                     SOUND + " TEXT, " +
-                    IMAGE + " BLOB, " +
-                    QUESTION + " TEXT, " +
-                    RESPONSE + " TEXT);";
+                    GAME + " BLOB, " +
+                    PLAYER_1 + " TEXT, " +
+                    PLAYER_2 + " TEXT);";
 
 
     private static final int DB_VERSION = 1;
@@ -78,59 +67,32 @@ public class DatabaseManager {
     /**
      * Inserts the response of the user
      *
-     * @param userId   - user that responded
      * @param date     - long value time
-     * @param color
      * @param sound
-     * @param image    - byte[] of the image
-     * @param question
-     * @param response
+     * @param gameData    - byte[] of the image
+     * @param player1
+     * @param player2
      * @return
      */
-    public long insertRecord(int userId, long date, int color, String sound, byte[] image, String question, String response) {
+    public long insertRecord(long date, String sound, byte[] gameData, String player1, String player2) {
         ContentValues cv = new ContentValues();
-        cv.put(USER_ID, userId);
         cv.put(DATE, date);
-        cv.put(COLOR, color);
-        cv.put(IMAGE, image);
+        cv.put(GAME, gameData);
         cv.put(SOUND, sound);
-        cv.put(QUESTION, question);
-        cv.put(RESPONSE, response);
+        cv.put(PLAYER_1, player1);
+        cv.put(PLAYER_2, player2);
         return db.insert(DB_TABLE_CHAT, null, cv);
     }
 
-    public long insertUser(int userId, String username) {
-        ContentValues cv = new ContentValues();
-        cv.put(USER_ID, userId);
-        cv.put(USER_NAME, username);
-        return db.insert(DB_TABLE_USERS, null, cv);
-    }
 
-    public ArrayList<Record> getRecords(int userId) {
+    public ArrayList<Record> getRecords() {
         ArrayList<Record> results = new ArrayList<Record>();
-        Cursor cursorQuery = db.query(DB_TABLE_USERS, chatColumns, USER_ID + " = " + userId, null, null, null, null);
+        Cursor cursorQuery = db.query(DB_TABLE_USERS, chatColumns, null, null, null, null, null);
         for (cursorQuery.moveToFirst(); !cursorQuery.isAfterLast(); cursorQuery
                 .moveToNext()) {
             results.add(parseRecordData(cursorQuery));
         }
         return results;
-    }
-
-    public ArrayList<User> getUsers() {
-        ArrayList<User> results = new ArrayList<User>();
-        Cursor cursorQuery = db.query(DB_TABLE_USERS, userColumns, null, null, null, null, null);
-        for (cursorQuery.moveToFirst(); !cursorQuery.isAfterLast(); cursorQuery
-                .moveToNext()) {
-            results.add(parseUserData(cursorQuery));
-        }
-        return results;
-    }
-
-
-    public User getUser(int id) {
-        Cursor query = db.query(DB_TABLE_USERS, userColumns, USER_ID + " = " + id, null, null, null, null);
-        query.moveToFirst();
-        return parseUserData(query);
     }
 
     public void close() {
@@ -158,28 +120,19 @@ public class DatabaseManager {
     }
 
     private Record parseRecordData(Cursor cursor) {
-        int userId = cursor.getColumnIndex(USER_ID);
         int date = cursor.getColumnIndex(DATE);
-        int color = cursor.getColumnIndex(COLOR);
-        int imageUrl = cursor.getColumnIndex(IMAGE);
-        int question = cursor.getColumnIndex(QUESTION);
-        int response = cursor.getColumnIndex(RESPONSE);
+        int imageUrl = cursor.getColumnIndex(GAME);
+        int sound = cursor.getColumnIndex(SOUND);
+        int question = cursor.getColumnIndex(PLAYER_1);
+        int response = cursor.getColumnIndex(PLAYER_2);
         return new Record.Builder()
-                .setUserId(cursor.getInt(userId))
                 .setDate(cursor.getLong(date))
+                .setSound(cursor.getString(sound))
                 .setImage(cursor.getBlob(imageUrl))
-                .setColor(cursor.getInt(color))
                 .setQuestion(cursor.getString(question))
                 .setResponse(cursor.getString(response))
                 .createRecord();
     }
-
-    private User parseUserData(Cursor cursor) {
-        int userId = cursor.getColumnIndex(USER_ID);
-        int userName = cursor.getColumnIndex(USER_NAME);
-        return new User(cursor.getInt(userId), cursor.getString(userName));
-    }
-
 
     class DBHelper extends SQLiteOpenHelper {
 
@@ -190,7 +143,6 @@ public class DatabaseManager {
         @Override
         public void onCreate(SQLiteDatabase sqLiteDatabase) {
             sqLiteDatabase.execSQL(DB_CREATE_CHAT);
-            sqLiteDatabase.execSQL(DB_CREATE_USERS);
         }
 
         @Override
