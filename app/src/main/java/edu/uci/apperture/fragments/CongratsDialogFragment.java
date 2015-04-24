@@ -21,11 +21,10 @@ public class CongratsDialogFragment extends DialogFragment {
         return frag;
     }
 
-
     @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-        String msg = getArguments().getString(KEY);
+        String msg = savedInstanceState.getString(KEY, "");
         return new AlertDialog.Builder(getActivity())
                 .setTitle("Congrats")
                 .setMessage(msg).create();

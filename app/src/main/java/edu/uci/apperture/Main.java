@@ -16,7 +16,6 @@ import android.view.WindowManager;
 
 import java.util.concurrent.TimeUnit;
 
-import edu.uci.apperture.fragments.CongratsDialogFragment;
 import edu.uci.apperture.fragments.GameFragment;
 import edu.uci.apperture.fragments.SongDialogFragment;
 import edu.uci.apperture.service.IMediaListener;
@@ -130,9 +129,6 @@ public class Main extends ActionBarActivity implements
     @Override
     public void onBackPressed() {
         switch (appState) {
-            case GAME:
-
-                break;
             case MAIN:
                 mService.shutdown();
                 stopService(new Intent(this, MainService.class));
@@ -186,8 +182,10 @@ public class Main extends ActionBarActivity implements
         mp.stop();
         mp.release();
         invalidateOptionsMenu();
-        DialogFragment frag = SongDialogFragment.newInstance(songs, "Yay you did it!!! Want to Try Again?");
+        DialogFragment frag = SongDialogFragment.newInstance(
+                songs, getString(R.string.select_music));
         frag.show(getSupportFragmentManager(), "SongDialog");
+
         Log.i(TAG, "Completed notified");
     }
 }

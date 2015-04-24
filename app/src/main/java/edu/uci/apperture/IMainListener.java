@@ -6,7 +6,7 @@ package edu.uci.apperture;
  */
 public interface IMainListener {
     public enum APP_STATE {
-        GAME,
+        CAMERA,
         MAIN
     }
 
