@@ -79,7 +79,8 @@ public class MainService extends Service implements MediaPlayer.OnCompletionList
                     if (gameFragment.getGameView().getColor(2) != Color.GRAY) {
                         flag1 = 0;
                         gameFragment.setNextColor(Color.GRAY, 2);
-                        if (!this.getMediaPlayer().isPlaying() && this.getMediaPlayer().getCurrentPosition() < this.getMediaPlayer().getDuration() - 1300)
+                        if (!this.getMediaPlayer().isPlaying() &&
+                                this.getMediaPlayer().getCurrentPosition() < this.getMediaPlayer().getDuration() - 1300)
                             this.togglePlay();
                     }
                     if (gameFragment.getGameView().getColor(0) != Color.GRAY) {
@@ -88,19 +89,19 @@ public class MainService extends Service implements MediaPlayer.OnCompletionList
                         if (flag > 1) {
                             flag = 0;
                             gameFragment.setNextColor(Color.GRAY, 0);
-                            if (!this.getMediaPlayer().isPlaying() && this.getMediaPlayer().getCurrentPosition() < this.getMediaPlayer().getDuration() - 1300)
+                            if (!this.getMediaPlayer().isPlaying() &&
+                                    this.getMediaPlayer().getCurrentPosition() < this.getMediaPlayer().getDuration() - 1300)
                                 this.togglePlay();
 
                         }
                     }
-
-
                     break;
                 case R.id.btn_game_top:
                     if (gameFragment.getGameView().getColor(1) != Color.GRAY) {
                         flag2 = 0;
                         gameFragment.setNextColor(Color.GRAY, 1);
-                        if (!this.getMediaPlayer().isPlaying() && this.getMediaPlayer().getCurrentPosition() < this.getMediaPlayer().getDuration() - 1300)
+                        if (!this.getMediaPlayer().isPlaying() &&
+                                this.getMediaPlayer().getCurrentPosition() < this.getMediaPlayer().getDuration() - 1300)
                             this.togglePlay();
                     }
                     if (gameFragment.getGameView().getColor(0) != Color.GRAY) {
@@ -109,7 +110,8 @@ public class MainService extends Service implements MediaPlayer.OnCompletionList
                         if (flag > 1) {
                             flag = 0;
                             gameFragment.setNextColor(Color.GRAY, 0);
-                            if (!this.getMediaPlayer().isPlaying() && this.getMediaPlayer().getCurrentPosition() < this.getMediaPlayer().getDuration() - 1300)
+                            if (!this.getMediaPlayer().isPlaying() &&
+                                    this.getMediaPlayer().getCurrentPosition() < this.getMediaPlayer().getDuration() - 1300)
                                 this.togglePlay();
                         }
                     }
@@ -209,7 +211,6 @@ public class MainService extends Service implements MediaPlayer.OnCompletionList
 
         @Override
         public void run() {
-
             try {
                 while (mainService.getMediaPlayer().isPlaying()) {
                     i = r.nextInt(3) + 1;
