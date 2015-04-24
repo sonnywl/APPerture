@@ -78,11 +78,13 @@ public class Start extends ActionBarActivity implements View.OnClickListener, HS
                 break;
         }
     }
-
+    
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        MediaPlayer mp = MediaPlayer.create(this, R.raw.intro_m);
-        mp.start();
+        if(!mp.isPlaying()) {
+            mp = MediaPlayer.create(this, R.raw.intro_m);
+            mp.start();
+        }
         getMenuInflater().inflate(R.menu.menu_start, menu);
         // Get the menu item.
         MenuItem menuItem = menu.findItem(R.id.menu_share);

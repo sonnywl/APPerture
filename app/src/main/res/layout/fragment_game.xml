@@ -8,7 +8,8 @@
     <RelativeLayout
         android:id="@+id/game_controller"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:alpha="1">
 
         <ImageButton
             android:background="@drawable/drum_top"
@@ -16,7 +17,8 @@
             android:layout_width="match_parent"
             android:layout_height="100dp"
             android:layout_alignParentTop="true"
-            android:scaleType="fitXY"/>
+            android:scaleType="fitXY"
+            android:alpha="1" />
 
         <ImageButton
             android:background="@drawable/drum_bottom"
@@ -24,7 +26,8 @@
             android:layout_width="match_parent"
             android:layout_height="100dp"
             android:layout_alignParentBottom="true"
-            android:scaleType="fitXY"/>
+            android:scaleType="fitXY"
+            android:alpha="1" />
     </RelativeLayout>
 </FrameLayout>
 
