@@ -43,7 +43,7 @@ public class Start extends ActionBarActivity implements
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
         mPreferences = PreferenceManager.getDefaultSharedPreferences(this);
-        int p1Color = mPreferences.getInt("PlayerOneColor", 0xFF458B00);
+        int p1Color = mPreferences.getInt("PlayerOneColor", 0xFF6600);
         int p2Color = mPreferences.getInt("PlayerTwoColor", Color.BLUE);
 
         findViewById(R.id.btn_start_player1).setOnClickListener(this);
