@@ -172,6 +172,10 @@ public class Main extends ActionBarActivity implements
     @Override
     public void completed() {
         isPlaying = false;
+        DialogFragment frag = SongDialogFragment.newInstance(
+                songs, "Yay you did it!!! Want to try again?");
+        frag.show(getSupportFragmentManager(), "SongDialog");
+
         MediaPlayer mp = MediaPlayer.create(this, R.raw.yay);
         mp.start();
         try {
@@ -182,9 +186,6 @@ public class Main extends ActionBarActivity implements
         mp.stop();
         mp.release();
         invalidateOptionsMenu();
-        DialogFragment frag = SongDialogFragment.newInstance(
-                songs, getString(R.string.select_music));
-        frag.show(getSupportFragmentManager(), "SongDialog");
 
         Log.i(TAG, "Completed notified");
     }
