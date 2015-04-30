@@ -26,11 +26,14 @@ import edu.uci.apperture.fragments.HSVColorPickerDialog;
  * Main User Start Menu
  * Created by Sonny on 4/21/2015.
  */
-public class Start extends ActionBarActivity implements View.OnClickListener, HSVColorPickerDialog.OnColorSelectedListener {
+public class Start extends ActionBarActivity implements
+        View.OnClickListener,
+        HSVColorPickerDialog.OnColorSelectedListener,
+        MediaPlayer.OnCompletionListener {
     private static final String TAG = Start.class.getSimpleName();
     private SharedPreferences mPreferences;
     private int playerSelection = 0;
-    MediaPlayer mp;
+    private MediaPlayer mp;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,11 +43,8 @@ public class Start extends ActionBarActivity implements View.OnClickListener, HS
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
         mPreferences = PreferenceManager.getDefaultSharedPreferences(this);
-        int p1Color = mPreferences.getInt("PlayerOneColor", 0xFF458B00);
+        int p1Color = mPreferences.getInt("PlayerOneColor", 0xffFF6600);
         int p2Color = mPreferences.getInt("PlayerTwoColor", Color.BLUE);
-
-        mp = MediaPlayer.create(this, R.raw.intro_m);
-        mp.start();
 
         findViewById(R.id.btn_start_player1).setOnClickListener(this);
         findViewById(R.id.btn_start_player2).setOnClickListener(this);
@@ -55,6 +55,14 @@ public class Start extends ActionBarActivity implements View.OnClickListener, HS
         setButtonBgColor(R.id.btn_start_player2, p2Color);
         setButtonBgColor(R.id.btn_start_game, 0xff34a238);
         setButtonBgColor(R.id.btn_start_option, 0xfff6e213);
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        mp = MediaPlayer.create(this, R.raw.intro_m);
+        mp.setOnCompletionListener(this);
+        mp.start();
     }
 
     @Override
@@ -73,16 +81,32 @@ public class Start extends ActionBarActivity implements View.OnClickListener, HS
                 dialog.show(this.getSupportFragmentManager(), "About");
                 break;
             case R.id.btn_start_game:
-                mp.stop();
                 startActivity(new Intent(this, Main.class));
                 break;
         }
     }
 
     @Override
+    protected void onPause() {
+        super.onPause();
+        if (mp.isPlaying()) {
+            mp.stop();
+        }
+        mp.release();
+    }
+
+    @Override
+    public void onCompletion(MediaPlayer mediaPlayer) {
+        try {
+            mp.seekTo(0);
+            mp.start();
+        } catch (Exception e) {
+            // ILLEGAL ACCESS FOR MEDIA PLAYER
+        }
+    }
+
+    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        MediaPlayer mp = MediaPlayer.create(this, R.raw.intro_m);
-        mp.start();
         getMenuInflater().inflate(R.menu.menu_start, menu);
         // Get the menu item.
         MenuItem menuItem = menu.findItem(R.id.menu_share);
@@ -108,7 +132,6 @@ public class Start extends ActionBarActivity implements View.OnClickListener, HS
                 "Facebook: facebook.com/apperture2015\n" +
                 "Twitter: twitter.com/APPerture2015\n" +
                 "Weebly: apperture.weebly.com/about.html\n");
-
         return intent;
     }
 

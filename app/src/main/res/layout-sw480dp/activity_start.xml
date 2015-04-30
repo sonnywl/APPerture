@@ -13,14 +13,15 @@
         android:src="@drawable/logo_small"
         android:adjustViewBounds="true"
         android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"/>
+        android:layout_centerHorizontal="true" />
 
     <TableLayout
         android:layout_below="@+id/start_logo"
         android:layout_alignParentBottom="true"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center_vertical|center_horizontal">
+        android:gravity="center_vertical|center_horizontal"
+        >
 
         <TableRow
             android:layout_width="match_parent"
@@ -39,8 +40,8 @@
                 android:paddingEnd="8dp"
                 android:paddingLeft="15dp"
                 android:paddingStart="15dp"
-                android:layout_width="@dimen/btn_diameter"
-                android:layout_height="@dimen/btn_diameter"/>
+                android:layout_width="@dimen/btn_diameter_large"
+                android:layout_height="@dimen/btn_diameter_large"/>
         </TableRow>
 
         <TableRow
@@ -53,20 +54,20 @@
                 style="@style/btn_start"
                 android:id="@+id/btn_start_player1"
                 android:background="@drawable/btn_start"
-                android:layout_width="@dimen/btn_diameter"
-                android:layout_height="@dimen/btn_diameter"
+                android:layout_width="@dimen/btn_diameter_large"
+                android:layout_height="@dimen/btn_diameter_large"
                 android:text="1"/>
 
             <View
-                android:layout_width="@dimen/center_pad"
+                android:layout_width="@dimen/center_pad_large"
                 android:layout_height="match_parent"/>
 
             <Button
                 style="@style/btn_start"
                 android:id="@+id/btn_start_player2"
                 android:background="@drawable/btn_start"
-                android:layout_width="@dimen/btn_diameter"
-                android:layout_height="@dimen/btn_diameter"
+                android:layout_width="@dimen/btn_diameter_large"
+                android:layout_height="@dimen/btn_diameter_large"
                 android:text="2"
                 />
         </TableRow>
@@ -83,18 +84,18 @@
                 android:id="@+id/btn_start_option"
                 android:src="@drawable/ic_action_settings"
                 android:background="@drawable/btn_start"
-                android:layout_width="@dimen/btn_diameter"
-                android:layout_height="@dimen/btn_diameter"/>
+                android:layout_width="@dimen/btn_diameter_large"
+                android:layout_height="@dimen/btn_diameter_large"/>
         </TableRow>
     </TableLayout>
-
     <ImageView
+        android:layout_marginTop="200dp"
         android:id="@+id/apperture_logo"
-        android:layout_width="150dp"
+        android:layout_width="200dp"
         android:layout_height="wrap_content"
         android:src="@drawable/logo_small2"
         android:layout_alignParentBottom="true"
         android:adjustViewBounds="true"
         android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"/>
+        android:layout_alignParentEnd="true" />
 </RelativeLayout>

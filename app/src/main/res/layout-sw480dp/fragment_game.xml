@@ -16,7 +16,7 @@
             android:background="@drawable/drum_top"
             android:id="@+id/btn_game_top"
             android:layout_width="match_parent"
-            android:layout_height="80dp"
+            android:layout_height="200dp"
             android:layout_alignParentTop="true"
             android:scaleType="fitXY"
             android:alpha="1"/>
@@ -32,25 +32,28 @@
                 android:rotation="180"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
+                android:layout_marginRight="15dp"
+                android:layout_marginEnd="15dp"
                 android:src="@drawable/hands_left_solid"/>
+
 
             <ImageView
                 android:rotation="180"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
+                android:layout_marginLeft="15dp"
+                android:layout_marginStart="15dp"
                 android:src="@drawable/hands_right_solid"/>
         </LinearLayout>
-
 
         <ImageButton
             android:background="@drawable/drum_bottom"
             android:id="@+id/btn_game_bottom"
             android:layout_width="match_parent"
-            android:layout_height="80dp"
+            android:layout_height="200dp"
             android:layout_alignParentBottom="true"
             android:scaleType="fitXY"
             android:alpha="1"/>
-
 
         <LinearLayout
             android:id="@+id/hands_bottom"
@@ -65,13 +68,19 @@
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
+                android:layout_marginRight="15dp"
+                android:layout_marginEnd="15dp"
                 android:src="@drawable/hands_left_solid"/>
+
 
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
+                android:layout_marginLeft="15dp"
+                android:layout_marginStart="15dp"
                 android:src="@drawable/hands_right_solid"/>
         </LinearLayout>
+
     </RelativeLayout>
 </FrameLayout>
 

@@ -6,35 +6,24 @@ package edu.uci.apperture.database;
  * Created by Sonny on 4/16/2015.
  */
 public class Record {
-    private final int userId;
     private final long date;
-    private final int color;
     private final byte[] image;
     private final String sound;
     private final String question;
     private final String response;
 
-    public Record(int userId, long date, int color, String sound, byte[] image, String question, String response) {
-        this.userId = userId;
+    public Record(long date, String sound, byte[] image, String question, String response) {
         this.date = date;
-        this.color = color;
         this.sound = sound;
         this.image = image;
         this.question = question;
         this.response = response;
     }
 
-    public int getUserId() {
-        return userId;
-    }
-
     public long getDate() {
         return date;
     }
 
-    public int getColor() {
-        return color;
-    }
 
     public String getSound() {
         return sound;
@@ -54,26 +43,14 @@ public class Record {
 
 
     public static class Builder {
-        private int userId;
         private long date;
-        private int color;
         private String sound;
         private byte[] image;
         private String question;
         private String response;
 
-        public Builder setUserId(int userId) {
-            this.userId = userId;
-            return this;
-        }
-
         public Builder setDate(long date) {
             this.date = date;
-            return this;
-        }
-
-        public Builder setColor(int color) {
-            this.color = color;
             return this;
         }
 
@@ -98,7 +75,7 @@ public class Record {
         }
 
         public Record createRecord() {
-            return new Record(userId, date, color, sound, image, question, response);
+            return new Record(date, sound, image, question, response);
         }
     }
 }
